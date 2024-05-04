@@ -5,6 +5,5 @@ App = QApplication([])
 
 Window = MainWindow()
 Window.show()
-print("xd")
 
 App.exec()
