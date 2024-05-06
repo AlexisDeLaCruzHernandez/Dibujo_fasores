@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 color_principal = "#FC93AD"
 
 
+# Modified button
 class Button(QPushButton):
     def __init__(self, text):
         super().__init__()
@@ -29,6 +30,7 @@ class Button(QPushButton):
         )
 
 
+# Modified label
 class Label(QLabel):
     def __init__(self, text):
         super().__init__()
@@ -44,6 +46,7 @@ class Label(QLabel):
         )
 
 
+# Modified line edit
 class LineEdit(QLineEdit):
     def __init__(self, text):
         super().__init__()
@@ -61,18 +64,20 @@ class LineEdit(QLineEdit):
         )
 
 
+# Modified canvas
 class Graphic(FigureCanvasQTAgg):
     def __init__(self, width=4, height=3, dpi=100):
-        fig, ax1 = plt.subplots(1, 1, facecolor=color_principal, layout='constrained',
-                                figsize=(width, height), dpi=dpi)
-        ax1.set_xticks([])
-        ax1.set_yticks([])
-        ax1.set_facecolor("#1C1C1C")
+        self.fig, self.ax1 = plt.subplots(1, 1, facecolor=color_principal, layout='constrained',
+                                          figsize=(width, height), dpi=dpi)
+        self.ax1.set_xticks([])
+        self.ax1.set_yticks([])
+        self.ax1.set_facecolor("#1C1C1C")
         for axis in ['top', 'bottom', 'left', 'right']:
-            ax1.spines[axis].set_linewidth(0)
-        super().__init__(fig)
+            self.ax1.spines[axis].set_linewidth(0)
+        super().__init__(self.fig)
 
 
+# Modified toolbar
 class ToolBar(NavigationToolbar):
     def __init__(self, graphic, parent=None):
         super().__init__(graphic, parent)

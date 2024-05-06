@@ -3,6 +3,7 @@ from Config_widgets import Button, Label, LineEdit, Graphic, ToolBar
 from PyQt6.QtGui import QIcon
 
 
+# Modified main window
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -17,20 +18,20 @@ class MainWindow(QMainWindow):
         layout_v3 = QVBoxLayout()
         layout_v4 = QVBoxLayout()
 
-        self.label1 = Label("Módulo: ")
-        layout_v1.addWidget(self.label1)
+        self.module_label = Label("Módulo: ")
+        layout_v1.addWidget(self.module_label)
         layout_v1.addSpacing(15)
-        self.lineedit1 = LineEdit("Módulo")
-        layout_v1.addWidget(self.lineedit1)
+        self.module = LineEdit("Módulo")
+        layout_v1.addWidget(self.module)
 
-        self.label2 = Label("Ángulo: ")
-        layout_v2.addWidget(self.label2)
+        self.angle_label = Label("Ángulo: ")
+        layout_v2.addWidget(self.angle_label)
         layout_v2.addSpacing(15)
-        self.lineedit2 = LineEdit("Ángulo")
-        layout_v2.addWidget(self.lineedit2)
+        self.angle = LineEdit("Ángulo")
+        layout_v2.addWidget(self.angle)
 
-        self.button3 = Button("Cargar")
-        layout_v3.addWidget(self.button3)
+        self.charge = Button("Cargar")
+        layout_v3.addWidget(self.charge)
         layout_v3.addSpacing(15)
         self.lineedit3 = LineEdit("Etiqueta")
         layout_v3.addWidget(self.lineedit3)
