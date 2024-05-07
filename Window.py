@@ -31,11 +31,13 @@ class MainWindow(QMainWindow):
         layout_v2.addWidget(self.angle)
 
         self.charge = Button("Cargar")
-        self.charge.clicked.connect(lambda: self.graphic.plot_vector(self.module.text(), self.angle.text()))
+        self.charge.clicked.connect(lambda: self.graphic.plot_vector(self.module.text(),
+                                                                     self.angle.text(),
+                                                                     self.label.text()))
         layout_v3.addWidget(self.charge)
         layout_v3.addSpacing(15)
-        self.lineedit3 = LineEdit("Etiqueta")
-        layout_v3.addWidget(self.lineedit3)
+        self.label = LineEdit("Etiqueta")
+        layout_v3.addWidget(self.label)
 
         self.graphic = Graphic(width=5, height=4, dpi=100)
         toolbar = ToolBar(self.graphic, self)

@@ -5,7 +5,7 @@ from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as Navigation
 import matplotlib.pyplot as plt
 from numpy import cos, sin, radians
 
-color_principal = "#FC93AD"
+principal_color = "#FC93AD"
 
 
 # Modified button
@@ -18,16 +18,16 @@ class Button(QPushButton):
             "Button {"
             "font: bold 15px ;;"
             "border-radius: 13px ;;"
-            "border: 2px solid" + color_principal + ";;"
+            "border: 2px solid" + principal_color + ";;"
             "padding: 1px 1px ;;"
-            "color:" + color_principal + ";;"
+            "color:" + principal_color + ";;"
             "background-color: #1C1C1C }"
 
             "Button:hover {"
             "background-color: #424242 }"
 
             "Button:pressed {"
-            "border: 5px solid" + color_principal + "}"
+            "border: 5px solid" + principal_color + "}"
         )
 
 
@@ -40,9 +40,9 @@ class Label(QLabel):
         self.setStyleSheet(
             "Label {"
             "font: bold 15px ;;"
-            "border-bottom: 2px solid" + color_principal + ";;"
+            "border-bottom: 2px solid" + principal_color + ";;"
             "padding: 1px 1px ;;"
-            "color:" + color_principal + ";;"
+            "color:" + principal_color + ";;"
             "background-color: #1C1C1C }"
         )
 
@@ -56,11 +56,11 @@ class LineEdit(QLineEdit):
         self.setFixedSize(120, 35)
         self.setStyleSheet(
             "LineEdit{"
-            "border: 2px solid" + color_principal + ";;"
+            "border: 2px solid" + principal_color + ";;"
             "font: 15px ;;"
             "border-radius: 5px ;;"
             "padding: 1px 1px ;;"
-            "color:" + color_principal + ";;"
+            "color:" + principal_color + ";;"
             "background-color: #1C1C1C }"
         )
 
@@ -68,8 +68,13 @@ class LineEdit(QLineEdit):
 # Modified canvas
 class Graphic(FigureCanvasQTAgg):
     def __init__(self, width=4, height=3, dpi=100):
-        self.margin = 0
-        self.fig, self.ax1 = plt.subplots(1, 1, facecolor=color_principal, layout='constrained',
+        self.colors = {
+            "Current": "g",
+            "Voltage": "r",
+            "Default": principal_color,
+        }
+        self.axis_limit = 0
+        self.fig, self.ax1 = plt.subplots(1, 1, facecolor=principal_color, layout='constrained',
                                           figsize=(width, height), dpi=dpi)
         self.ax1.set_xticks([])
         self.ax1.set_yticks([])
@@ -78,7 +83,8 @@ class Graphic(FigureCanvasQTAgg):
             self.ax1.spines[axis].set_linewidth(0)
         super().__init__(self.fig)
 
-    def plot_vector(self, module, angle):
+    def plot_vector(self, module, angle, label):
+        # Transform string in coordinates
         try:
             module = float(module.replace(",", "."))
             angle = radians(float(angle.replace(",", ".")))
@@ -86,13 +92,42 @@ class Graphic(FigureCanvasQTAgg):
             print("Mostrar ventana de error")
             return
         x_value = module * cos(angle)
-        if abs(x_value) > self.margin:
-            self.margin = abs(x_value)
         y_value = module * sin(angle)
-        if abs(y_value) > self.margin:
-            self.margin = abs(y_value)
-        self.ax1.quiver(0, 0, x_value, y_value, scale_units="xy", angles="xy", color="red", scale=1)
-        self.ax1.axis([-self.margin-10, self.margin+10, -self.margin-10, self.margin+10])
+
+        # Detect the type of the label and transform to LaTeX
+        color = self.colors.get("Default")
+        if label[0] == "I" or label == "i":
+            color = self.colors.get("Current")
+            label = "$" + label[0] + "_{" + label[1:] + "}$"
+        elif label[0] == "V" or label[0] == "v":
+            color = self.colors.get("Voltage")
+            label = "$" + label[0] + "_{" + label[1:] + "}$"
+        else:
+            label = "$" + label + "$"
+
+        # Setting the axis limit
+        if abs(x_value) > self.axis_limit:
+            self.axis_limit = abs(x_value)
+        elif abs(y_value) > self.axis_limit:
+            self.axis_limit = abs(y_value)
+        margin = self.axis_limit * 0.15
+
+        # Setting the place of the label
+        move_text = [0, 0]
+        if x_value > 0:
+            move_text[0] = self.axis_limit * 0.01 + x_value
+        elif x_value < 0:
+            move_text[0] = -self.axis_limit * 0.08 + x_value
+        if y_value > 0:
+            move_text[1] = self.axis_limit * 0.01 + y_value
+        elif y_value < 0:
+            move_text[1] = -self.axis_limit * 0.05 + y_value
+
+        # Ploting
+        self.ax1.quiver(0, 0, x_value, y_value, scale_units="xy", angles="xy", color=color, scale=1)
+        self.ax1.annotate(label, xy=(x_value, y_value), xytext=move_text, color=color)
+        self.ax1.axis([-self.axis_limit - margin, self.axis_limit + margin,
+                       -self.axis_limit - margin, self.axis_limit + margin])
         self.draw()
 
 
@@ -114,7 +149,7 @@ class ToolBar(NavigationToolbar):
             if x.text() in icons_buttons:
                 x.setIcon(icons_buttons.get(x.text(), QIcon()))
         self.setStyleSheet(
-            "color:" + color_principal + ";;"
+            "color:" + principal_color + ";;"
             "background-color:" + "#1C1C1C" + ";;"
             "font: 15px ;;"
             "border-radius: 13px ;;"
