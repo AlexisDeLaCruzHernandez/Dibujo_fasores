@@ -31,6 +31,7 @@ class MainWindow(QMainWindow):
         layout_v2.addWidget(self.angle)
 
         self.charge = Button("Cargar")
+        self.charge.clicked.connect(lambda: self.graphic.plot_vector(self.module.text(), self.angle.text()))
         layout_v3.addWidget(self.charge)
         layout_v3.addSpacing(15)
         self.lineedit3 = LineEdit("Etiqueta")

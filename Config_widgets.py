@@ -3,6 +3,7 @@ from PyQt6.QtGui import QIcon
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 import matplotlib.pyplot as plt
+from numpy import cos, sin, radians
 
 color_principal = "#FC93AD"
 
@@ -67,6 +68,7 @@ class LineEdit(QLineEdit):
 # Modified canvas
 class Graphic(FigureCanvasQTAgg):
     def __init__(self, width=4, height=3, dpi=100):
+        self.margin = 0
         self.fig, self.ax1 = plt.subplots(1, 1, facecolor=color_principal, layout='constrained',
                                           figsize=(width, height), dpi=dpi)
         self.ax1.set_xticks([])
@@ -75,6 +77,23 @@ class Graphic(FigureCanvasQTAgg):
         for axis in ['top', 'bottom', 'left', 'right']:
             self.ax1.spines[axis].set_linewidth(0)
         super().__init__(self.fig)
+
+    def plot_vector(self, module, angle):
+        try:
+            module = float(module.replace(",", "."))
+            angle = radians(float(angle.replace(",", ".")))
+        except ValueError:
+            print("Mostrar ventana de error")
+            return
+        x_value = module * cos(angle)
+        if abs(x_value) > self.margin:
+            self.margin = abs(x_value)
+        y_value = module * sin(angle)
+        if abs(y_value) > self.margin:
+            self.margin = abs(y_value)
+        self.ax1.quiver(0, 0, x_value, y_value, scale_units="xy", angles="xy", color="red", scale=1)
+        self.ax1.axis([-self.margin-10, self.margin+10, -self.margin-10, self.margin+10])
+        self.draw()
 
 
 # Modified toolbar
