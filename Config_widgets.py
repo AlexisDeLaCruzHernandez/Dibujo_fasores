@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QPushButton, QLabel, QLineEdit
+from PyQt6.QtWidgets import QPushButton, QLabel, QLineEdit, QMessageBox
 from PyQt6.QtGui import QIcon
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
@@ -65,6 +65,21 @@ class LineEdit(QLineEdit):
         )
 
 
+# Modified message box
+class MessageBoxError(QMessageBox):
+    def __init__(self, butontext, windowtitle, windowtext):
+        super().__init__()
+        self.setStyleSheet("background-color: #1C1C1C ;; color:" + principal_color + ";;")
+        self.setWindowIcon(QIcon("Images/Icon.png"))
+        aceptar = Button(butontext)
+        self.setWindowTitle(windowtitle)
+        self.setText(windowtext)
+        self.addButton(aceptar, QMessageBox.ButtonRole.AcceptRole)
+        self.setDefaultButton(aceptar)
+        self.setIcon(QMessageBox.icon(self).Critical)
+        self.exec()
+
+
 # Modified canvas
 class Graphic(FigureCanvasQTAgg):
     def __init__(self, width=4, height=3, dpi=100):
@@ -89,7 +104,8 @@ class Graphic(FigureCanvasQTAgg):
             module = float(module.replace(",", "."))
             angle = radians(float(angle.replace(",", ".")))
         except ValueError:
-            print("Mostrar ventana de error")
+            MessageBoxError("Entendido", "Error",
+                            "Por favor ingresar un NÚMERO en módulo y ángulo")
             return
         x_value = module * cos(angle)
         y_value = module * sin(angle)
@@ -110,7 +126,7 @@ class Graphic(FigureCanvasQTAgg):
         # Setting the axis limit
         if abs(x_value) > self.axis_limit:
             self.axis_limit = abs(x_value)
-        elif abs(y_value) > self.axis_limit:
+        if abs(y_value) > self.axis_limit:
             self.axis_limit = abs(y_value)
         margin = self.axis_limit * 0.25
 
@@ -134,6 +150,7 @@ class Graphic(FigureCanvasQTAgg):
 
     def delete_plot(self):
         self.ax1.cla()
+        self.axis_limit = 0
         self.ax1.set_xticks([])
         self.ax1.set_yticks([])
         self.draw()
