@@ -1,6 +1,7 @@
 from PyQt6.QtWidgets import QMainWindow, QVBoxLayout, QHBoxLayout, QFrame
 from Config_widgets import Button, Label, LineEdit, Graphic, ToolBar
 from PyQt6.QtGui import QIcon
+import os
 
 
 # Modified main window
@@ -9,7 +10,8 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.setStyleSheet("background-color: #1C1C1C")
         self.setWindowTitle("Graficador de fasores")
-        self.setWindowIcon(QIcon("Images/Icon.png"))
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        self.setWindowIcon(QIcon(os.path.join(script_dir, "Images", "Icon.png")))
         self.setFixedSize(500, 720)
 
         layout_h1 = QHBoxLayout()

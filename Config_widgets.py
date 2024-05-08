@@ -3,6 +3,7 @@ from PyQt6.QtGui import QIcon
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 import matplotlib.pyplot as plt
+import os
 from numpy import cos, sin, radians
 
 principal_color = "#FC93AD"
@@ -160,12 +161,14 @@ class Graphic(FigureCanvasQTAgg):
 class ToolBar(NavigationToolbar):
     def __init__(self, graphic, parent=None):
         super().__init__(graphic, parent)
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        os.path.join(script_dir, "Images", "Icon.png")
         unwanted_buttons = ["Customize", "Subplots", "Forward", "Back"]
         icons_buttons = {
-            "Home": QIcon("Images/Home.png"),
-            "Pan": QIcon("Images/Move.png"),
-            "Zoom": QIcon("Images/Zoom_to_rect.png"),
-            "Save": QIcon("Images/Filesave.png"),
+            "Home": QIcon(os.path.join(script_dir, "Images", "Home.png")),
+            "Pan": QIcon(os.path.join(script_dir, "Images", "Move.png")),
+            "Zoom": QIcon(os.path.join(script_dir, "Images", "Zoom_to_rect.png")),
+            "Save": QIcon(os.path.join(script_dir, "Images", "Filesave.png")),
         }
 
         for x in graphic.toolbar.actions():
