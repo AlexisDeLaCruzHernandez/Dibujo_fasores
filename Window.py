@@ -12,7 +12,8 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Graficador de fasores")
         script_dir = os.path.dirname(os.path.abspath(__file__))
         self.setWindowIcon(QIcon(os.path.join(script_dir, "Images", "Icon.png")))
-        self.setFixedSize(500, 720)
+        self.setMinimumSize(400, 570)
+        # self.setFixedSize(500, 720)
 
         layout_h1 = QHBoxLayout()
         layout_h2 = QHBoxLayout()
